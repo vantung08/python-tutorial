@@ -1,10 +1,15 @@
 [tool.poetry]
-name = "hello-world"
+name = "python-tutorial"
 version = "0.1.0"
 description = "Just a simple Hello-World module"
 authors = ["tungtv"]
 license = "N/A"
 readme = "README.md"
+packages = [
+    { include = "main" },
+    { include = "test" }
+]
+
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -13,6 +18,11 @@ python = "^3.10"
 [tool.poetry.group.test.dependencies]
 pytest = "^8.2.2"
 
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+main = "main:main"
