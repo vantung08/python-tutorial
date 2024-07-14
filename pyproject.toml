@@ -6,14 +6,13 @@ authors = ["tungtv"]
 license = "N/A"
 readme = "README.md"
 packages = [
-    { include = "main" },
-    { include = "test" },
-    { include = "greeting" }
+    { include = "app" }
 ]
 
 
 [tool.poetry.dependencies]
 python = "^3.10"
+fastapi = "^0.111.0"
 
 
 [tool.poetry.group.test.dependencies]
