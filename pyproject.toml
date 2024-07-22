@@ -13,6 +13,8 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.111.0"
+dnspython = "^2.6.1"
+pymongo = "^4.8.0"
 
 
 [tool.poetry.group.test.dependencies]
@@ -23,7 +25,3 @@ coverage = "^7.6.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-
-[tool.poetry.scripts]
-main = "main:main"
