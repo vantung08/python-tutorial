@@ -3,7 +3,7 @@ from pymongo import MongoClient
 
 router = APIRouter()
 
-uri = "mongodb://localhost:27017/"
+uri = "mongodb://mongodb:27017"
 client = MongoClient(uri)
 
 @router.post("/users/{user_name}")
