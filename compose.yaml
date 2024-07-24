@@ -12,7 +12,7 @@ services:
           - webapp
     develop:
       watch:
-        - action: sync
+        - action: sync+restart
           path: ./app
           target: /app/app
         - action: rebuild
