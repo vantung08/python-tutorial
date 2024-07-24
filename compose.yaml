@@ -10,6 +10,13 @@ services:
       mynetwork:
         aliases:
           - webapp
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app/app
+        - action: rebuild
+          path: pyproject.toml
     depends_on:
       - mongodb
 
