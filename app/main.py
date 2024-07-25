@@ -2,7 +2,6 @@ import logging
 from fastapi import FastAPI
 from app.routers import greeting, users_management
 
-
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
