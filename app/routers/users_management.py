@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
 from motor.motor_asyncio import AsyncIOMotorClient
-from ..core.config import settings
 from ..dependencies import get_mongo_client
 
 router = APIRouter()
