@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from ..core.config import settings
 
@@ -30,4 +30,4 @@ async def get_user(user_name, db_name: str = "python-tutorial-mongodb", collecti
         user = await collection.find_one({"name": user_name})
         return print(user)
     except Exception as e:
-        raise Exception("Unable to find the document due to the following error: ", e)
+        raise HTTPException(status_code=500, detail=f"Unable to find the document due to the following error: {e}")
