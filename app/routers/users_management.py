@@ -1,13 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from ..dependencies import get_mongo_db
-from pydantic import BaseModel, Field
-
-class User(BaseModel):
-    name: str = Field(title="Name of the user", max_length=300)
-    age: int = Field(default=None, gt=0, description="The price must be greater than zero")
-    gender: str = None
-    email: str | None = None
+from ..db.pydantic_model import User
 
 router = APIRouter(
     prefix="/users"
