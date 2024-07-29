@@ -12,6 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 async def mongodb_lifespan(app: FastAPI):
     # Startup actions
     app.mongo_client = AsyncIOMotorClient(settings.mongodb_uri)
+    app.mongo_db = app.mongo_client["python-tutorial-mongodb"]
     print("Connected to MongoDB")
     # Yield control back to the application
     yield
