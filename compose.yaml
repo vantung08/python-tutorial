@@ -1,26 +1,26 @@
 name: python-tutorial
 
 services:
-  webapp:
-    build: .
-    container_name: webapp
-    env_file:
-      - .env
-    ports:
-      - "8000:8000"
-    networks:
-      mynetwork:
-        aliases:
-          - webapp
-    develop:
-      watch:
-        - action: sync+restart
-          path: ./app
-          target: /app/app
-        - action: rebuild
-          path: pyproject.toml
-    depends_on:
-      - mongodb
+  # webapp:
+  #   build: .
+  #   container_name: webapp
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     mynetwork:
+  #       aliases:
+  #         - webapp
+  #   develop:
+  #     watch:
+  #       - action: sync+restart
+  #         path: ./app
+  #         target: /app/app
+  #       - action: rebuild
+  #         path: pyproject.toml
+  #   depends_on:
+  #     - mongodb
 
   mongodb:
     image: "mongodb/mongodb-community-server:7.0.8-ubuntu2204"
