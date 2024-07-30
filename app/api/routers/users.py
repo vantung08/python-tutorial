@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from ..dependencies import get_mongo_db
-from ..db.pydantic_model import User
+from app.pydantic_schema import User
 
 router = APIRouter(
     prefix="/users"
