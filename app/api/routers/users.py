@@ -1,19 +1,18 @@
 from fastapi import APIRouter, HTTPException, Depends
-from motor.motor_asyncio import AsyncIOMotorDatabase
-from ..dependencies import get_mongo_db
-from app.pydantic_schema import User
+from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorCollection
+from ..dependencies import get_mongo_db, get_mongo_collection
+from app.pydantic_schema import UserSchema
+from app.crud import create_user
 
 router = APIRouter(
     prefix="/users"
     )
 
 @router.post("/")
-async def add_user(user: User, collection_name: str = "users", mongo_db: AsyncIOMotorDatabase = Depends(get_mongo_db)):
+async def add_user(user: UserSchema, collection: AsyncIOMotorCollection = Depends(get_mongo_collection)):
     try:
-        collection = mongo_db[collection_name]
-        document = user.model_dump()
-        result = await collection.insert_one(document)
-        return print(f"Document inserted with ID: {result.inserted_id}")
+        created_user = await create_user(user, collection)
+        return print(f"Document inserted with ID: {created_user['_id']}")
     except Exception as e: # Required to refactor
         raise Exception("Unable to find the document due to the following error: ", e)
 
