@@ -1,9 +1,8 @@
 import logging
 from fastapi import FastAPI
-from motor.motor_asyncio import AsyncIOMotorClient
 from contextlib import asynccontextmanager
 from app.api.main import api_router
-from .core.config import settings
+from app.initial_db import init_mongodb
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -11,9 +10,7 @@ logging.basicConfig(level=logging.DEBUG)
 @asynccontextmanager
 async def mongodb_lifespan(app: FastAPI):
     # Startup actions
-    app.mongo_client = AsyncIOMotorClient(settings.mongodb_uri)
-    app.mongo_db = app.mongo_client["python-tutorial-mongodb"]
-    app.mongo_users_collection = app.mongo_db["users"]
+    await init_mongodb()
     print("Connected to MongoDB")
     # Yield control back to the application
     yield

@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from beanie import Document
 
 
-class UsersModel(BaseModel):
+class UsersModel(Document):
     name: str = Field(...)
     age: int = Field(...)
     gender: str = Field(...)
