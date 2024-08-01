@@ -2,8 +2,11 @@ from pydantic import Field
 from beanie import Document
 
 
-class UsersModel(Document):
+class Users(Document):
     name: str = Field(...)
     age: int = Field(...)
-    gender: str = Field(...)
-    email: str = Field(...)
+    gender: str | None = Field(...)
+    email: str | None = Field(...)
+
+    class Settings:
+        name = "users"

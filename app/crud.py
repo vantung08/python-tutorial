@@ -1,10 +1,10 @@
-from app.models import UsersModel
+from app.models import Users
 from app.pydantic_schema import UserSchema
 
 async def create_user(schema_user: UserSchema):
-    model_user = UsersModel(**schema_user.model_dump())
-    new_user = await UsersModel.insert_one(model_user)
-    created_user = await UsersModel.find_one({"_id": new_user.id})
+    model_user = Users(**schema_user.model_dump())
+    new_user = await Users.insert_one(model_user)
+    created_user = await Users.get(new_user.id)
     return created_user
 
 # async def read_single_user(schema_user: UserSchema, collection: AsyncIOMotorCollection):
