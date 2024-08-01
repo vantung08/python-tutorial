@@ -10,12 +10,12 @@ logging.basicConfig(level=logging.DEBUG)
 @asynccontextmanager
 async def mongodb_lifespan(app: FastAPI):
     # Startup actions
-    await init_mongodb()
+    mongo_client = await init_mongodb()
     print("Connected to MongoDB")
     # Yield control back to the application
     yield
     # Shutdown actions
-    app.mongo_client.close()
+    mongo_client.close()
     print("Disconnected from MongoDB")
 
 app = FastAPI(lifespan=mongodb_lifespan)

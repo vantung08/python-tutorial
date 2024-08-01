@@ -2,9 +2,9 @@ from pydantic import Field
 from beanie import Document
 
 
-class Users(Document):
+class User(Document):
     name: str = Field(...)
-    age: int = Field(...)
+    age: int | None = Field(...)
     gender: str | None = Field(...)
     email: str | None = Field(...)
 
