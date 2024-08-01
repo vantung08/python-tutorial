@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.pydantic_schema import UserSchema
+from app.api_schema import UserSchema
 from app.crud import create_user, find_user
 
 router = APIRouter(

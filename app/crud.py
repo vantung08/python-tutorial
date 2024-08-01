@@ -1,5 +1,5 @@
 from app.models import User
-from app.pydantic_schema import UserSchema
+from app.api_schema import UserSchema
 
 async def create_user(schema_user: UserSchema):
     model_user = User(**schema_user.model_dump())
