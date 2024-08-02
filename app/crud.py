@@ -1,5 +1,5 @@
 from app.models import User
-from app.api_schema import UserIn
+from app.schema import UserIn
 
 async def create_user(schema_user: UserIn):
     model_user = User(**schema_user.model_dump())

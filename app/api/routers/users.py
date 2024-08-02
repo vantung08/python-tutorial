@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api_schema import UserIn, UserOut
+from app.schema import UserIn, UserOut
 from app.crud import create_user, find_user
 from typing import Any
 
