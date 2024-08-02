@@ -13,3 +13,6 @@ class UserIn(UserBase):
 class UserOut(UserBase):
     class Config:
         orm_mode = True
+
+class UserInDB(UserBase):
+    hashed_password: str
