@@ -3,8 +3,6 @@ from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
 from app import crud
 from beanie import PydanticObjectId
-from pydantic import EmailStr
-from app.core.security import verify_password
 
 router = APIRouter(
     prefix="/users"
