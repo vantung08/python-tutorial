@@ -14,5 +14,11 @@ class UserOut(UserBase):
     class Config:
         orm_mode = True
 
+class UserUpdate(UserBase):
+    username: str | None = None
+    email: EmailStr | None = None
+    age: int | None = None
+    gender: str | None = None
+
 class UserInDB(UserBase):
     hashed_password: str

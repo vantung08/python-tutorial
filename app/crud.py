@@ -1,6 +1,8 @@
 from app.models import User
-from app.schema import UserIn, UserInDB
+from app.schema import UserIn, UserInDB, UserUpdate
 from app.core.security import get_password_hash
+from beanie import PydanticObjectId
+from fastapi import HTTPException
 
 async def create_user(schema_user: UserIn):
     hashed_password = get_password_hash(schema_user.password)
@@ -10,5 +12,17 @@ async def create_user(schema_user: UserIn):
     created_user = await User.find_one({"_id": new_user.id})
     return created_user
 
-async def find_user(user_name: str):
-    return await User.find({"username": user_name}).to_list()
+async def get_user(id: PydanticObjectId):
+    return await User.get(id)
+
+async def update_user(id: PydanticObjectId, user_update: UserUpdate):
+    filter_user_update = {k: v for k, v in user_update.model_dump().items() if v is not None}
+    update_query = {"$set": {
+        field: value for field, value in filter_user_update.items()
+    }}
+    user = await User.get(id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User record not found!")
+    await user.update(update_query)
+    updated_user = await User.get(id)
+    return updated_user
