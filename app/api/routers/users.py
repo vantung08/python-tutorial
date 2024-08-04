@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status
-from app.schema import UserIn, UserOut, UserUpdate
+from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
 from app import crud
 from beanie import PydanticObjectId
@@ -32,7 +32,7 @@ async def get_all_user() -> list[User]:
         raise Exception(f"Unable to get the user due to the following error: {e}")
     
 @router.put("/{id}", response_model=UserOut, status_code=status.HTTP_200_OK)
-async def update_user(id: PydanticObjectId, user_update: UserUpdate) -> User:
+async def update_user(id: PydanticObjectId, user_update: UserUpdateIn) -> User:
     try:
         updated_user = await crud.update_user(id, user_update)
         return updated_user

@@ -1,5 +1,5 @@
 from app.models import User
-from app.schema import UserIn, UserInDB, UserUpdate, UserUpdateInDB
+from app.schema import UserIn, UserInDB, UserUpdateIn, UserUpdateInDB
 from app.core.security import get_password_hash
 from beanie import PydanticObjectId
 from fastapi import HTTPException
@@ -23,7 +23,7 @@ async def get_all_user() -> list[User]:
         raise HTTPException(status_code=404, detail="User record not found!")
     return users
 
-async def update_user(id: PydanticObjectId, user_update: UserUpdate):
+async def update_user(id: PydanticObjectId, user_update: UserUpdateIn):
     if user_update.password is not None:
         hashed_password = get_password_hash(user_update.password)
         user_update = UserUpdateInDB(**user_update.model_dump(), hashed_password=hashed_password)

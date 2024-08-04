@@ -14,19 +14,17 @@ class UserOut(UserBase):
     class Config:
         orm_mode = True
 
-class UserUpdate(BaseModel):
-    username: str | None = None
-    email: EmailStr | None = None
-    age: int | None = None
-    gender: str | None = None
-    password: str | None = None
-
-class UserUpdateInDB(BaseModel):
-    username: str | None = None
-    email: EmailStr | None = None
-    age: int | None = None
-    gender: str | None = None
-    hashed_password: str | None = None
-
 class UserInDB(UserBase):
     hashed_password: str
+
+class UserUpdateBase(BaseModel):
+    username: str | None = None
+    email: EmailStr | None = None
+    age: int | None = None
+    gender: str | None = None
+
+class UserUpdateIn(UserUpdateBase):
+    password: str | None = None
+
+class UserUpdateInDB(UserUpdateBase):
+    hashed_password: str | None = None
