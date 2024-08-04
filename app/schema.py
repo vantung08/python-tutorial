@@ -28,3 +28,7 @@ class UserUpdateIn(UserUpdateBase):
 
 class UserUpdateInDB(UserUpdateBase):
     hashed_password: str | None = None
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str

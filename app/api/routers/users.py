@@ -3,6 +3,8 @@ from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
 from app import crud
 from beanie import PydanticObjectId
+from pydantic import EmailStr
+from app.core.security import verify_password
 
 router = APIRouter(
     prefix="/users"
@@ -23,6 +25,13 @@ async def get_user(id: PydanticObjectId) -> User:
         return await crud.get_user_by_id(id)
     except Exception as e:
         raise Exception(f"Unable to get the user due to the following error: {e}")
+    
+# @router.get("/{email}", response_model=UserOut, status_code=status.HTTP_200_OK)
+# async def get_user_by_email(email: EmailStr) -> User:
+#     try:
+#         return await crud.get_user_by_email(email)
+#     except Exception as e:
+#         raise Exception(f"Unable to get the user due to the following error: {e}")
     
 @router.get("/", response_model=list[UserOut], status_code=status.HTTP_200_OK)
 async def get_all_user() -> list[User]:
@@ -46,3 +55,5 @@ async def delete_user(id: PydanticObjectId):
         return deleted_user.deleted_count
     except Exception as e:
         raise Exception(f"Unable to delete the user due to the following error: {e}")
+    
+
