@@ -1,5 +1,5 @@
 from app.models import User
-from app.schema import UserIn, UserInDB, UserUpdate
+from app.schema import UserIn, UserInDB, UserUpdate, UserUpdateInDB
 from app.core.security import get_password_hash
 from beanie import PydanticObjectId
 from fastapi import HTTPException
@@ -24,6 +24,9 @@ async def get_all_user() -> list[User]:
     return users
 
 async def update_user(id: PydanticObjectId, user_update: UserUpdate):
+    if user_update.password is not None:
+        hashed_password = get_password_hash(user_update.password)
+        user_update = UserUpdateInDB(**user_update.model_dump(), hashed_password=hashed_password)
     filter_user_update = {k: v for k, v in user_update.model_dump().items() if v is not None}
     update_query = {"$set": {
         field: value for field, value in filter_user_update.items()
