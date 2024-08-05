@@ -4,6 +4,7 @@ from app.core.security import get_password_hash
 from beanie import PydanticObjectId
 from fastapi import HTTPException
 from pydantic import EmailStr
+from app.core.security import verify_password
 
 async def create_user(schema_user: UserIn):
     hashed_password = get_password_hash(schema_user.password)
@@ -51,3 +52,11 @@ async def delete_user(id: PydanticObjectId):
         raise HTTPException(status_code=404, detail="User record not found!")
     delete_user = await user.delete()
     return delete_user
+
+async def authenticate_user(email: str, password: str) -> User:
+    login_user = await get_user_by_email(email)
+    if not login_user:
+        raise HTTPException(status_code=404, detail="User record by email not found")
+    if not verify_password(password, login_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
+    return login_user
