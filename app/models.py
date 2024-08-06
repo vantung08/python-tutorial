@@ -1,14 +1,14 @@
-from pydantic import Field
-from beanie import Document
+from pydantic import Field, EmailStr
+from beanie import Document, Indexed
 from uuid import UUID, uuid4
-
+from typing import Annotated
 
 
 # Database model for users
 class User(Document):
     id: UUID = Field(default_factory=uuid4)
     username: str = Field(...)
-    email: str = Field(...)
+    email: Annotated[EmailStr, Indexed(unique=True)]
     hashed_password: str = Field(...)
     age: int | None = Field(...)
     gender: str | None = Field(...)

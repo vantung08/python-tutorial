@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, EmailStr
 
 class UserBase(BaseModel):
     username: str = Field(title="Name of the user", max_length=300)
-    email: EmailStr | None = None
+    email: EmailStr
     age: int | None = Field(default=None, gt=0, description="The age must be greater than zero")
     gender: str | None = None
 
