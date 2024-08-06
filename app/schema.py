@@ -1,9 +1,9 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, EmailStr
 
 class UserBase(BaseModel):
-    username: str = Field(title="Name of the user", max_length=300)
     email: EmailStr
-    age: int | None = Field(default=None, gt=0, description="The age must be greater than zero")
+    username: str | None = None
+    age: int | None = None
     gender: str | None = None
 
 class UserIn(UserBase):
