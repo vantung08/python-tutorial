@@ -1,10 +1,10 @@
 from app.models import User
 from app.schema import UserIn, UserInDB, UserUpdateIn, UserUpdateInDB
 from app.core.security import get_password_hash
-from beanie import PydanticObjectId
 from fastapi import HTTPException
 from pydantic import EmailStr
 from app.core.security import verify_password
+from uuid import UUID
 
 async def create_user(schema_user: UserIn):
     hashed_password = get_password_hash(schema_user.password)
@@ -19,7 +19,7 @@ async def get_user_by_email(email: EmailStr) -> User:
         raise HTTPException(status_code=404, detail="User record not found!")
     return user
 
-async def get_user_by_id(id: PydanticObjectId) -> User:
+async def get_user_by_id(id: UUID) -> User:
     user = await User.get(id)
     if not user:
         raise HTTPException(status_code=404, detail="User record not found!")
@@ -31,7 +31,7 @@ async def get_all_user() -> list[User]:
         raise HTTPException(status_code=404, detail="User record not found!")
     return users
 
-async def update_user(id: PydanticObjectId, user_update: UserUpdateIn):
+async def update_user(id: UUID, user_update: UserUpdateIn):
     if user_update.password is not None:
         hashed_password = get_password_hash(user_update.password)
         user_update = UserUpdateInDB(**user_update.model_dump(), hashed_password=hashed_password)
@@ -46,7 +46,7 @@ async def update_user(id: PydanticObjectId, user_update: UserUpdateIn):
     updated_user = await User.get(id)
     return updated_user
 
-async def delete_user(id: PydanticObjectId):
+async def delete_user(id: UUID):
     user = await User.get(id)
     if not user:
         raise HTTPException(status_code=404, detail="User record not found!")

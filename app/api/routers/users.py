@@ -2,7 +2,7 @@ from fastapi import APIRouter, status
 from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
 from app import crud
-from beanie import PydanticObjectId
+from uuid import UUID
 
 router = APIRouter(
     prefix="/users"
@@ -18,7 +18,7 @@ async def create_user(user: UserIn) -> User:
         raise Exception(f"Unable to create the user due to the following error: {e}")
 
 @router.get("/{id}", response_model=UserOut, status_code=status.HTTP_200_OK)
-async def get_user(id: PydanticObjectId) -> User:
+async def get_user(id: UUID) -> User:
     try:
         return await crud.get_user_by_id(id)
     except Exception as e:
@@ -39,7 +39,7 @@ async def get_all_user() -> list[User]:
         raise Exception(f"Unable to get the user due to the following error: {e}")
     
 @router.put("/{id}", response_model=UserOut, status_code=status.HTTP_200_OK)
-async def update_user(id: PydanticObjectId, user_update: UserUpdateIn) -> User:
+async def update_user(id: UUID, user_update: UserUpdateIn) -> User:
     try:
         updated_user = await crud.update_user(id, user_update)
         return updated_user
@@ -47,7 +47,7 @@ async def update_user(id: PydanticObjectId, user_update: UserUpdateIn) -> User:
         raise Exception(f"Unable to update the user due to the following error: {e}")
     
 @router.delete("/{id}")
-async def delete_user(id: PydanticObjectId):
+async def delete_user(id: UUID):
     try:
         deleted_user = await crud.delete_user(id)
         return deleted_user.deleted_count
