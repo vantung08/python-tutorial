@@ -7,11 +7,11 @@ from typing import Annotated
 # Database model for users
 class User(Document):
     id: UUID = Field(default_factory=uuid4)
-    email: Annotated[EmailStr, Indexed(unique=True)]
+    email: Annotated[EmailStr, Indexed(unique=True)] = Field(max_length=255)
     hashed_password: str = Field(...)
-    username: str | None = Field(...)
-    age: int | None = Field(...)
-    gender: str | None = Field(...)
+    full_name: str | None = Field(default=None, max_length=255)
+    age: int | None = Field(default=None, max_length=255)
+    gender: str | None = Field(default=None, max_length=255)
 
     class Settings:
         name = "users"

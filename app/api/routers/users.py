@@ -24,13 +24,6 @@ async def get_user(id: UUID) -> User:
     except Exception as e:
         raise Exception(f"Unable to get the user due to the following error: {e}")
     
-# @router.get("/{email}", response_model=UserOut, status_code=status.HTTP_200_OK)
-# async def get_user_by_email(email: EmailStr) -> User:
-#     try:
-#         return await crud.get_user_by_email(email)
-#     except Exception as e:
-#         raise Exception(f"Unable to get the user due to the following error: {e}")
-    
 @router.get("/", response_model=list[UserOut], status_code=status.HTTP_200_OK)
 async def get_all_user() -> list[User]:
     try:

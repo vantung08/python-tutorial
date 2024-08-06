@@ -1,13 +1,13 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 class UserBase(BaseModel):
-    email: EmailStr
-    username: str | None = None
-    age: int | None = None
-    gender: str | None = None
+    email: EmailStr = Field(max_length=255)
+    full_name: str | None = Field(default=None, max_length=255)
+    age: int | None = Field(default=None, max_length=255)
+    gender: str | None = Field(default=None, max_length=255)
 
 class UserIn(UserBase):
-    password: str
+    password: str = Field(min_length=8, max_length=40)
 
 
 class UserOut(UserBase):
@@ -18,17 +18,17 @@ class UserInDB(UserBase):
     hashed_password: str
 
 class UserUpdateBase(BaseModel):
-    username: str | None = None
-    email: EmailStr | None = None
-    age: int | None = None
-    gender: str | None = None
+    full_name: str | None = Field(default=None, max_length=255)
+    email: EmailStr | None = Field(default=None, max_length=255)
+    age: int | None = Field(default=None, max_length=255)
+    gender: str | None = Field(default=None, max_length=255)
 
 class UserUpdateIn(UserUpdateBase):
-    password: str | None = None
+    password: str | None = Field(default=None, min_length=8, max_length=40)
 
 class UserUpdateInDB(UserUpdateBase):
-    hashed_password: str | None = None
+    hashed_password: str | None = Field(default=None)
 
 class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
+    email: EmailStr = Field(max_length=255)
+    password: str = Field(min_length=8, max_length=40)
