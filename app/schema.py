@@ -32,3 +32,10 @@ class UserUpdateInDB(UserUpdateBase):
 class UserLogin(BaseModel):
     email: EmailStr = Field(max_length=255)
     password: str = Field(min_length=8, max_length=40)
+
+class Token(BaseModel):
+    access_token: str = Field(...)
+    token_type: str = "bearer"
+
+class TokenPayload(BaseModel):
+    sub: str | None = None
