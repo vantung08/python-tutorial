@@ -3,12 +3,12 @@ from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
 from app import crud
 from uuid import UUID
-from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
-from app.api.deps import get_current_user, oauth2_scheme
+from app.api.deps import get_current_active_user
 
 router = APIRouter(
-    prefix="/users"
+    prefix="/users",
+    dependencies=[Depends(get_current_active_user)]
     )
 
 @router.post("/", response_model=UserOut, status_code=status.HTTP_201_CREATED)
@@ -21,18 +21,18 @@ async def create_user(user: UserIn) -> User:
         raise Exception(f"Unable to create the user due to the following error: {e}")
     
 @router.get("/me")
-async def get_user_me(current_user: Annotated[User, Depends(get_current_user)]) -> User:
+async def get_user_me(current_user: Annotated[User, Depends(get_current_active_user)]) -> User:
     return current_user
 
 @router.get("/{id}", response_model=UserOut, status_code=status.HTTP_200_OK)
-async def get_user(id: UUID, token: Annotated[str, Depends(oauth2_scheme)]) -> User:
+async def get_user(id: UUID) -> User:
     try:
         return await crud.get_user_by_id(id)
     except Exception as e:
         raise Exception(f"Unable to get the user due to the following error: {e}")
     
 @router.get("/", response_model=list[UserOut], status_code=status.HTTP_200_OK)
-async def get_all_user(current_user: Annotated[str, Depends(get_current_user)]) -> list[User]:
+async def get_all_user() -> list[User]:
     try:
         return await crud.get_all_user()
     except Exception as e:

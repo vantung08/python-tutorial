@@ -16,15 +16,3 @@ class User(Document):
 
     class Settings:
         name = "users"
-
-# JSON payload containing access token
-# class Token(Document):
-#     access_token: str = Field(...)
-#     token_type: str = "bearer"
-
-#     class Settings:
-#         name = "tokens"
-
-# # Content of JWT token
-# class TokenPayload(Document):
-#     sub: str | None = None

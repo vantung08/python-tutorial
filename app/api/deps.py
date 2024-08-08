@@ -25,3 +25,11 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]) -> User:
+        active_status = current_user.is_active
+        if not active_status:
+             raise HTTPException(
+                  status_code=status.HTTP_403_FORBIDDEN,
+                  detail="Could not validate credential, inactive user")
+        return current_user
