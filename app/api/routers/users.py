@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, HTTPException
 from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
 from app import crud
@@ -15,7 +15,6 @@ router = APIRouter(
 async def create_user(user: UserIn) -> User:
     try:
         created_user = await crud.create_user(user)
-        print(f"Document inserted with ID: {created_user.id}")
         return created_user
     except Exception as e: # Required to refactor
         raise Exception(f"Unable to create the user due to the following error: {e}")
