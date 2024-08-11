@@ -11,7 +11,7 @@ router = APIRouter(
     prefix="/login"
     )
 
-@router.post("/access-token")
+@router.post("/access-token") 
 async def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
     try:
         login_user = await crud.authenticate_user(form_data.username, form_data.password)

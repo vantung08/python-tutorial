@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, status, Depends
 from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
 from app import crud
