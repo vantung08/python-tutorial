@@ -4,6 +4,7 @@ from app. schema import UserIn, UserInDB
 from app.core.security import get_password_hash
 from fastapi import HTTPException
 from pydantic import EmailStr
+from uuid import UUID
 
 def create_user(db: Session, schema_user: UserIn):
     hashed_password = get_password_hash(schema_user.password)
@@ -20,6 +21,11 @@ def get_user_by_email(db: Session, email: EmailStr) -> User:
         raise HTTPException(status_code=404, detail="User record not found!")
     return user
 
+def get_user_by_id(db: Session, id: UUID) -> User:
+    user = db.query(User).filter(User.id == id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User record not found!")
+    return user
 
 
 

@@ -4,6 +4,7 @@ from app import crud
 from app.schema import UserIn, UserOut
 from app.models import User
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 router = APIRouter(
     prefix="/users"
@@ -24,7 +25,12 @@ def create_user(user: UserIn, db: Session = Depends(get_db)) -> User:
     except Exception as e: # Required to refactor
         raise Exception(f"Unable to create the user due to the following error: {e}")
 
-
+@router.get("/{id}", response_model=UserOut, status_code=status.HTTP_200_OK)
+def get_user(id: UUID, db: Session = Depends(get_db)) -> User:
+    try:
+        return crud.get_user_by_id(db=db, id=id)
+    except Exception as e:
+        raise Exception(f"Unable to get the user due to the following error: {e}")
 
 
 
