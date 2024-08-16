@@ -27,6 +27,11 @@ def get_user_by_id(db: Session, id: UUID) -> User:
         raise HTTPException(status_code=404, detail="User record not found!")
     return user
 
+def get_all_user(db: Session) -> list[User]:
+    users = db.query(User).filter().all()
+    if not users:
+        raise HTTPException(status_code=404, detail="User record not found!")
+    return users
 
 
 

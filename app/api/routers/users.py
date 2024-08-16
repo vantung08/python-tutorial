@@ -32,7 +32,12 @@ def get_user(id: UUID, db: Session = Depends(get_db)) -> User:
     except Exception as e:
         raise Exception(f"Unable to get the user due to the following error: {e}")
 
-
+@router.get("/", response_model=list[UserOut], status_code=status.HTTP_200_OK)
+def get_all_user(db: Session = Depends(get_db)) -> list[User]:
+    try:
+        return crud.get_all_user(db=db)
+    except Exception as e:
+        raise Exception(f"Unable to get the user due to the following error: {e}")
 
 
 

@@ -1,20 +1,20 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
-from typing import Optional
-from sqlalchemy.dialects.postgresql import UUID
-import uuid
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from uuid import UUID, uuid4
+# from sqlalchemy.dialects.postgresql import UUID
 
-from app.database import Base
+class Base(DeclarativeBase):
+    pass
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
-    full_name = Column(String, nullable=True, default=None)
-    age = Column(Integer, nullable=True, default=None)
-    gender = Column(String, nullable=True, default=None)
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    # id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    email: Mapped[str] = mapped_column(unique=True, index=True)
+    hashed_password: Mapped[str] = mapped_column()
+    is_active: Mapped[bool] = mapped_column(default=True)
+    full_name: Mapped[str | None] = mapped_column(default=None)
+    age: Mapped[int | None] = mapped_column(default=None)
+    gender: Mapped[str | None] = mapped_column(default=None)
 
 
 
