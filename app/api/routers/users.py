@@ -1,7 +1,7 @@
 from app.database import SessionLocal
 from fastapi import APIRouter, status, Depends
 from app import crud
-from app.schema import UserIn, UserOut
+from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
 from sqlalchemy.orm import Session
 from uuid import UUID
@@ -39,7 +39,13 @@ def get_all_user(db: Session = Depends(get_db)) -> list[User]:
     except Exception as e:
         raise Exception(f"Unable to get the user due to the following error: {e}")
 
-
+@router.put("/{id}", response_model=UserOut, status_code=status.HTTP_200_OK)
+def update_user(id: UUID, user_update: UserUpdateIn, db: Session = Depends(get_db)) -> User:
+    try:
+        updated_user = crud.update_user(db, id, user_update)
+        return updated_user
+    except Exception as e:
+        raise Exception(f"Unable to update the user due to the following error: {e}")
 
 
 

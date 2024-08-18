@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 from app.models import User
-from app. schema import UserIn, UserInDB
+from app.schema import UserIn, UserInDB, UserUpdateIn, UserUpdateInDB
 from app.core.security import get_password_hash
 from fastapi import HTTPException
 from pydantic import EmailStr
@@ -16,24 +17,45 @@ def create_user(db: Session, schema_user: UserIn):
     return model_user
 
 def get_user_by_email(db: Session, email: EmailStr) -> User:
-    user = db.query(User).filter(User.email == email).first()
+    stm = select(User).where(User.email == email)
+    user = db.scalars(stm).first()
+    # user = db.query(User).filter(User.email == email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User record not found!")
     return user
 
 def get_user_by_id(db: Session, id: UUID) -> User:
-    user = db.query(User).filter(User.id == id).first()
+    stm = select(User).where(User.id == id)
+    user = db.scalars(stm).first()
     if not user:
         raise HTTPException(status_code=404, detail="User record not found!")
     return user
 
 def get_all_user(db: Session) -> list[User]:
-    users = db.query(User).filter().all()
+    stm = select(User)
+    users = db.scalars(stm)
     if not users:
         raise HTTPException(status_code=404, detail="User record not found!")
     return users
 
-
+def update_user(db: Session, id: UUID, user_update: UserUpdateIn):
+    if user_update.password is not None:
+        hashed_password = get_password_hash(user_update.password)
+        user_update = UserUpdateInDB(**user_update.model_dump(), hashed_password=hashed_password)
+    filter_user_update = {k: v for k, v in user_update.model_dump().items() if v is not None}
+    print(f'Filter_user_update: {filter_user_update}')
+    user = db.scalars(select(User).where(User.id == id)).first()
+    print(f'User: {vars(user)}')
+    if not user:
+        raise HTTPException(status_code=404, detail="User record not found!")
+    for key, value in filter_user_update.items():
+        if hasattr(user, key):
+            setattr(user, key, value)
+    updated_user = db.scalars(select(User).where(User.id == id)).first()
+    print(f'Updated_user: {vars(updated_user)}')
+    db.commit()
+    db.refresh(updated_user)
+    return updated_user
 
 
 
