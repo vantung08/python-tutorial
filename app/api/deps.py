@@ -41,7 +41,7 @@ def get_current_user(session: SessionDep, token: Annotated[str, Depends(oauth2_s
         raise credentials_exception
     return user
 
-def get_current_active_user(db: Session, current_user: Annotated[User, Depends(get_current_user)]) -> User:
+def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]) -> User:
         active_status = current_user.is_active
         if not active_status:
              raise HTTPException(

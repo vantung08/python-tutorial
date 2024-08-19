@@ -13,7 +13,7 @@ router = APIRouter(
     )
 
 
-@router.post("/", response_model=UserOut, dependencies=[Depends(get_current_user)])
+@router.post("/", response_model=UserOut, dependencies=[Depends(get_current_active_user)])
 def create_user(user: UserIn, session: SessionDep) -> User:
     try:
         created_user = crud.create_user(session, user)
@@ -21,21 +21,21 @@ def create_user(user: UserIn, session: SessionDep) -> User:
     except Exception as e: # Required to refactor
         raise Exception(f"Unable to create the user due to the following error: {e}")
 
-@router.get("/{id}", response_model=UserOut, dependencies=[Depends(get_current_user)])
+@router.get("/{id}", response_model=UserOut, dependencies=[Depends(get_current_active_user)])
 def get_user(id: UUID, session: SessionDep) -> User:
     try:
         return crud.get_user_by_id(session, id)
     except Exception as e:
         raise Exception(f"Unable to get the user due to the following error: {e}")
 
-@router.get("/", response_model=list[UserOut], dependencies=[Depends(get_current_user)])
+@router.get("/", response_model=list[UserOut], dependencies=[Depends(get_current_active_user)])
 def get_all_user(session: SessionDep) -> list[User]:
     try:
         return crud.get_all_user(session)
     except Exception as e:
         raise Exception(f"Unable to get the user due to the following error: {e}")
 
-@router.put("/{id}", response_model=UserOut, dependencies=[Depends(get_current_user)])
+@router.put("/{id}", response_model=UserOut, dependencies=[Depends(get_current_active_user)])
 def update_user(id: UUID, user_update: UserUpdateIn, session: SessionDep) -> User:
     try:
         updated_user = crud.update_user(session, id, user_update)
@@ -43,7 +43,7 @@ def update_user(id: UUID, user_update: UserUpdateIn, session: SessionDep) -> Use
     except Exception as e:
         raise Exception(f"Unable to update the user due to the following error: {e}")
 
-@router.delete("/{id}", dependencies=[Depends(get_current_user)])
+@router.delete("/{id}", dependencies=[Depends(get_current_active_user)])
 def delete_user(id: UUID, session: SessionDep) -> UserOut:
     try:
         deleted_user = crud.delete_user(session, id)
