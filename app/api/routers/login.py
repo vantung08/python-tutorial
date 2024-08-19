@@ -8,22 +8,19 @@ from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from app.database import SessionLocal
 from sqlalchemy.orm import Session
+from app.api.deps import SessionDep
 
 router = APIRouter(
     prefix="/login"
     )
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.post("/access-token") 
-def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)) -> Token:
+def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep) -> Token:
     try:
-        login_user = crud.authenticate_user(db, form_data.username, form_data.password)
+        email = form_data.username
+        password = form_data.password
+        login_user = crud.authenticate_user(session, email, password)
         access_token_expire = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         return Token(access_token=create_access_token(login_user.email, access_token_expire))
     except Exception as e:

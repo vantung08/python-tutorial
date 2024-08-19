@@ -31,12 +31,12 @@ def get_current_user(session: SessionDep, token: Annotated[str, Depends(oauth2_s
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=ALGORITHM)
         token_data = TokenPayload(**payload)
-        user_email = token_data.sub
-        if not user_email:
+        email = token_data.sub
+        if not email:
              raise credentials_exception
     except InvalidTokenError:
          raise credentials_exception
-    user = crud.get_user_by_email(session, token_data.sub)
+    user = crud.get_user_by_email(session, email)
     if not user:
         raise credentials_exception
     return user
