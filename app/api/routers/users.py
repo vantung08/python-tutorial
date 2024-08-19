@@ -1,12 +1,9 @@
-from app.database import SessionLocal
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Depends
 from app import crud
 from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
-from sqlalchemy.orm import Session
 from uuid import UUID
-from typing import Annotated
-from app.api.deps import get_current_active_user, get_current_user, SessionDep
+from app.api.deps import get_current_active_user, SessionDep
 
 router = APIRouter(
     prefix="/users"

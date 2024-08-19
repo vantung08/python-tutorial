@@ -1,8 +1,6 @@
 import logging
 from fastapi import FastAPI
-# from contextlib import asynccontextmanager
 from app.api.main import api_router
-# from app.initial_db import init_mongodb
 from app import models
 from app.database import engine
 

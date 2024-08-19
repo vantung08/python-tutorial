@@ -6,8 +6,6 @@ from datetime import timedelta
 from app.core.config import settings
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
-from app.database import SessionLocal
-from sqlalchemy.orm import Session
 from app.api.deps import SessionDep
 
 router = APIRouter(
