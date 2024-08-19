@@ -8,10 +8,21 @@ from app.core.config import settings
 from app.core.security import ALGORITHM
 from jwt.exceptions import InvalidTokenError
 from app import crud
+from sqlalchemy.orm import Session
+from app.database import SessionLocal
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/access-token")
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
+def get_db():
+    session = SessionLocal()
+    try:
+        yield session
+    finally:
+        session.close()
+
+SessionDep = Annotated[Session, Depends(get_db)]
+
+def get_current_user(session: SessionDep, token: Annotated[str, Depends(oauth2_scheme)]) -> User:
     credentials_exception = HTTPException(
          status_code=status.HTTP_401_UNAUTHORIZED,
          detail="Could not validate credentials",
@@ -25,12 +36,12 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
              raise credentials_exception
     except InvalidTokenError:
          raise credentials_exception
-    user = await crud.get_user_by_email(token_data.sub)
+    user = crud.get_user_by_email(session, token_data.sub)
     if not user:
         raise credentials_exception
     return user
 
-def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]) -> User:
+def get_current_active_user(db: Session, current_user: Annotated[User, Depends(get_current_user)]) -> User:
         active_status = current_user.is_active
         if not active_status:
              raise HTTPException(
