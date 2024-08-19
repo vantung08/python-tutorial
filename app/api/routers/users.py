@@ -20,6 +20,14 @@ def create_user(user: UserIn, session: SessionDep) -> User:
         return created_user
     except Exception as e: # Required to refactor
         raise Exception(f"Unable to create the user due to the following error: {e}")
+    
+@router.post("/signup", response_model=UserOut)
+def register_user(user: UserIn, session: SessionDep) -> User:
+    try:
+        registered_user = crud.create_user(session, user)
+        return registered_user
+    except Exception as e: # Required to refactor
+        raise Exception(f"Unable to create the user due to the following error: {e}")
 
 @router.get("/{id}", response_model=UserOut, dependencies=[Depends(get_current_active_user)])
 def get_user(id: UUID, session: SessionDep) -> User:
