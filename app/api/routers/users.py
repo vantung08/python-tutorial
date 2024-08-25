@@ -4,6 +4,7 @@ from app.schema import UserIn, UserOut, UserUpdateIn
 from app.models import User
 from uuid import UUID
 from app.api.deps import get_current_active_user, SessionDep
+from typing import Annotated
 
 router = APIRouter(
     prefix="/users"
@@ -25,6 +26,10 @@ def register_user(user: UserIn, session: SessionDep) -> User:
         return registered_user
     except Exception as e: # Required to refactor
         raise Exception(f"Unable to create the user due to the following error: {e}")
+
+@router.get("/me", response_model=UserOut)
+def get_user_me(current_user: Annotated[User, Depends(get_current_active_user)]) -> User:
+    return current_user
 
 @router.get("/{id}", response_model=UserOut, dependencies=[Depends(get_current_active_user)])
 def get_user(id: UUID, session: SessionDep) -> User:
@@ -56,9 +61,7 @@ def delete_user(id: UUID, session: SessionDep) -> UserOut:
     except Exception as e:
         raise Exception(f"Unable to delete the user due to the following error: {e}")
 
-# @router.get("/me")
-# def get_user_me(current_user: Annotated[User, Depends(get_current_active_user)], db: Session = Depends(get_db)) -> User:
-#     return current_user
+
 
 
 

@@ -22,25 +22,44 @@ services:
   #   depends_on:
   #     - mongodb
 
-  mongodb:
-    image: "mongodb/mongodb-community-server:7.0.8-ubuntu2204"
-    container_name: mongodb
+  # mongodb:
+  #   image: "mongodb/mongodb-community-server:7.0.8-ubuntu2204"
+  #   container_name: mongodb
+  #   ports:
+  #     - "27017:27017"
+  #   networks:
+  #     mynetwork:
+  #       aliases:
+  #         - mongodb
+  #   volumes:
+  #     - type: volume
+  #       source: mongodb-data
+  #       target: /data/db 
+
+  postgresql:
+    image: "postgres:16.4"
+    container_name: postgresql
     ports:
-      - "27017:27017"
+      - "5432:5432"
     networks:
       mynetwork:
         aliases:
-          - mongodb
+          - postgresql
     volumes:
       - type: volume
-        source: mongodb-data
-        target: /data/db 
+        source: postgresql-data
+        target: /var/lib/postgresql/data 
+    environment:
+      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_USER=vantung08
+      - POSTGRES_DB=python-tutorial-postgresql
 
 networks:
   mynetwork:
 
 volumes:
-  mongodb-data:
+  postgresql-data:
+  # mongodb-data:
 
 
 
