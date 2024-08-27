@@ -30,38 +30,34 @@ def register_user(user_create: UserCreate, session: SessionDep) -> Any:
     return registered_user
 
 @router.get("/me", response_model=UserPublish)
-def get_user_me(current_user: Annotated[User, Depends(get_current_active_user)]) -> User:
+def get_user_me(current_user: Annotated[User, Depends(get_current_active_user)]) -> Any:
     return current_user
 
 @router.get("/{id}", response_model=UserPublish, dependencies=[Depends(get_current_active_user)])
-def get_user(id: UUID, session: SessionDep) -> User:
-    try:
-        return crud.get_user_by_id(session=session, id=id)
-    except Exception as e:
-        raise Exception(f"Unable to get the user due to the following error: {e}")
+def get_user(id: UUID, session: SessionDep) -> Any:
+    user = crud.get_user_by_id(session=session, id=id)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
+                            detail="User record not found!")
+    return user
 
 @router.get("/", response_model=list[UserPublish], dependencies=[Depends(get_current_active_user)])
-def get_all_user(session: SessionDep) -> list[User]:
-    try:
-        return crud.get_all_user(session=session)
-    except Exception as e:
-        raise Exception(f"Unable to get the user due to the following error: {e}")
+def get_all_user(session: SessionDep) -> Any:
+    users = crud.get_all_user(session=session)
+    if not users:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
+                            detail="Users record not found!")
+    return users
 
 @router.put("/{id}", response_model=UserPublish, dependencies=[Depends(get_current_active_user)])
-def update_user(id: UUID, user_update: UserUpdate, session: SessionDep) -> User:
-    try:
-        updated_user = crud.update_user(session=session, id=id, user_update=user_update)
-        return updated_user
-    except Exception as e:
-        raise Exception(f"Unable to update the user due to the following error: {e}")
+def update_user(id: UUID, user_update: UserUpdate, session: SessionDep) -> Any:
+    updated_user = crud.update_user(session=session, id=id, user_update=user_update)
+    return updated_user
 
 @router.delete("/{id}", response_model=Message, dependencies=[Depends(get_current_active_user)])
 def delete_user(id: UUID, session: SessionDep) -> Any:
-    try:
-        message = crud.delete_user(session=session, id=id)
-        return message
-    except Exception as e:
-        raise Exception(f"Unable to delete the user due to the following error: {e}")
+    message = crud.delete_user(session=session, id=id)
+    return message
 
 
 
