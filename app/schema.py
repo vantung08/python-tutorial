@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
+import uuid
 
 class UserBase(BaseModel):
     email: EmailStr = Field(max_length=255)
@@ -7,28 +8,24 @@ class UserBase(BaseModel):
     age: int | None = Field(default=None, max_length=255)
     gender: str | None = Field(default=None, max_length=255)
 
-class UserIn(UserBase):
+class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=40)
 
 
-class UserOut(UserBase):
+class UserPublish(UserBase):
+    id: uuid.UUID
     class Config:
         orm_mode = True
 
 class UserInDB(UserBase):
     hashed_password: str
 
-class UserUpdateBase(BaseModel):
-    full_name: str | None = Field(default=None, max_length=255)
+class UserUpdate(UserBase):
     email: EmailStr | None = Field(default=None, max_length=255)
-    is_active: bool = Field(default=True)
-    age: int | None = Field(default=None, max_length=255)
-    gender: str | None = Field(default=None, max_length=255)
-
-class UserUpdateIn(UserUpdateBase):
     password: str | None = Field(default=None, min_length=8, max_length=40)
 
-class UserUpdateInDB(UserUpdateBase):
+class UserUpdateInDB(UserBase):
+    email: EmailStr | None = Field(default=None, max_length=255)
     hashed_password: str | None = Field(default=None)
 
 class UserLogin(BaseModel):
