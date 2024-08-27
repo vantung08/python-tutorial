@@ -36,7 +36,7 @@ def get_current_user(session: SessionDep, token: Annotated[str, Depends(oauth2_s
              raise credentials_exception
     except InvalidTokenError:
          raise credentials_exception
-    user = crud.get_user_by_email(session, email)
+    user = crud.get_user_by_email(session=session, email=email)
     if not user:
         raise credentials_exception
     return user

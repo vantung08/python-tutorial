@@ -1,43 +1,43 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.models import User
-from app.schema import UserIn, UserInDB, UserUpdateIn, UserUpdateInDB
+from app.schema import UserIn, UserInDB, UserUpdateIn, UserUpdateInDB, Message
 from app.core.security import get_password_hash, verify_password
 from fastapi import HTTPException
 from pydantic import EmailStr
 from uuid import UUID
 
-def create_user(session: Session, schema_user: UserIn):
+def create_user(*, session: Session, schema_user: UserIn) -> User:
     hashed_password = get_password_hash(schema_user.password)
     In_DB_user = UserInDB(**schema_user.model_dump(), hashed_password=hashed_password)
-    model_user = User(**In_DB_user.model_dump())
-    session.add(model_user)
+    db_obj = User(**In_DB_user.model_dump())
+    session.add(db_obj)
     session.commit()
-    session.refresh(model_user)
-    return model_user
+    session.refresh(db_obj)
+    return db_obj
 
-def get_user_by_email(session: Session, email: EmailStr) -> User:
+def get_user_by_email(*, session: Session, email: EmailStr) -> User:
     stm = select(User).where(User.email == email)
     user = session.scalars(stm).first()
     if not user:
         raise HTTPException(status_code=404, detail="User record not found!")
     return user
 
-def get_user_by_id(session: Session, id: UUID) -> User:
+def get_user_by_id(*, session: Session, id: UUID) -> User:
     stm = select(User).where(User.id == id)
     user = session.scalars(stm).first()
     if not user:
         raise HTTPException(status_code=404, detail="User record not found!")
     return user
 
-def get_all_user(session: Session) -> list[User]:
+def get_all_user(*, session: Session) -> list[User]:
     stm = select(User)
     users = session.scalars(stm)
     if not users:
         raise HTTPException(status_code=404, detail="User record not found!")
     return users
 
-def update_user(session: Session, id: UUID, user_update: UserUpdateIn):
+def update_user(*, session: Session, id: UUID, user_update: UserUpdateIn):
     if user_update.password is not None:
         hashed_password = get_password_hash(user_update.password)
         user_update = UserUpdateInDB(**user_update.model_dump(), hashed_password=hashed_password)
@@ -56,16 +56,16 @@ def update_user(session: Session, id: UUID, user_update: UserUpdateIn):
     session.refresh(updated_user)
     return updated_user
 
-def delete_user(session: Session, id: UUID):
-    user = session.scalars(select(User).where(User.id == id)).first()
-    if not user:
+def delete_user(*, session: Session, id: UUID):
+    db_obj = session.scalars(select(User).where(User.id == id)).first()
+    if not db_obj:
         raise HTTPException(status_code=404, detail="User record not found!")
-    session.delete(user)
+    session.delete(db_obj)
     session.commit()
-    return user
+    return Message(message="User deleted successfully")
 
-def authenticate_user(session: Session, email: str, password: str) -> User:
-    user = get_user_by_email(session, email)
+def authenticate_user(*, session: Session, email: str, password: str) -> User:
+    user = get_user_by_email(session=session, email=email)
     if not user:
         raise HTTPException(status_code=404, detail="User record by email not found")
     if not verify_password(password, user.hashed_password):

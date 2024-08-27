@@ -18,7 +18,7 @@ def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()
     try:
         email = form_data.username
         password = form_data.password
-        login_user = crud.authenticate_user(session, email, password)
+        login_user = crud.authenticate_user(session=session, email=email, password=password)
         access_token_expire = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         return Token(access_token=create_access_token(login_user.email, access_token_expire))
     except Exception as e:

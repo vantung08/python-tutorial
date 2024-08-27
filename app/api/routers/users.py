@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from app import crud
-from app.schema import UserIn, UserOut, UserUpdateIn
+from app.schema import UserIn, UserOut, UserUpdateIn, Message
 from app.models import User
 from uuid import UUID
 from app.api.deps import get_current_active_user, SessionDep
-from typing import Annotated
+from typing import Annotated, Any
 
 router = APIRouter(
     prefix="/users"
@@ -14,7 +14,7 @@ router = APIRouter(
 @router.post("/", response_model=UserOut, dependencies=[Depends(get_current_active_user)])
 def create_user(user: UserIn, session: SessionDep) -> User:
     try:
-        created_user = crud.create_user(session, user)
+        created_user = crud.create_user(session=session, schema_user=user)
         return created_user
     except Exception as e: # Required to refactor
         raise Exception(f"Unable to create the user due to the following error: {e}")
@@ -22,7 +22,7 @@ def create_user(user: UserIn, session: SessionDep) -> User:
 @router.post("/signup", response_model=UserOut)
 def register_user(user: UserIn, session: SessionDep) -> User:
     try:
-        registered_user = crud.create_user(session, user)
+        registered_user = crud.create_user(session=session, schema_user=user)
         return registered_user
     except Exception as e: # Required to refactor
         raise Exception(f"Unable to create the user due to the following error: {e}")
@@ -34,30 +34,30 @@ def get_user_me(current_user: Annotated[User, Depends(get_current_active_user)])
 @router.get("/{id}", response_model=UserOut, dependencies=[Depends(get_current_active_user)])
 def get_user(id: UUID, session: SessionDep) -> User:
     try:
-        return crud.get_user_by_id(session, id)
+        return crud.get_user_by_id(session=session, id=id)
     except Exception as e:
         raise Exception(f"Unable to get the user due to the following error: {e}")
 
 @router.get("/", response_model=list[UserOut], dependencies=[Depends(get_current_active_user)])
 def get_all_user(session: SessionDep) -> list[User]:
     try:
-        return crud.get_all_user(session)
+        return crud.get_all_user(session=session)
     except Exception as e:
         raise Exception(f"Unable to get the user due to the following error: {e}")
 
 @router.put("/{id}", response_model=UserOut, dependencies=[Depends(get_current_active_user)])
 def update_user(id: UUID, user_update: UserUpdateIn, session: SessionDep) -> User:
     try:
-        updated_user = crud.update_user(session, id, user_update)
+        updated_user = crud.update_user(session=session, id=id, user_update=user_update)
         return updated_user
     except Exception as e:
         raise Exception(f"Unable to update the user due to the following error: {e}")
 
-@router.delete("/{id}", dependencies=[Depends(get_current_active_user)])
-def delete_user(id: UUID, session: SessionDep) -> UserOut:
+@router.delete("/{id}", response_model=Message, dependencies=[Depends(get_current_active_user)])
+def delete_user(id: UUID, session: SessionDep) -> Any:
     try:
-        deleted_user = crud.delete_user(session, id)
-        return deleted_user
+        message = crud.delete_user(session=session, id=id)
+        return message
     except Exception as e:
         raise Exception(f"Unable to delete the user due to the following error: {e}")
 
