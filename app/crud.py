@@ -12,7 +12,7 @@ def create_user(*, session: Session, schema_user: UserCreate) -> User:
     In_DB_user = UserInDB(**schema_user.model_dump(), hashed_password=hashed_password)
     db_obj = User(**In_DB_user.model_dump())
     session.add(db_obj)
-    session.commit()
+    session.flush()
     session.refresh(db_obj)
     return db_obj
 
@@ -47,7 +47,7 @@ def update_user(*, session: Session, id: UUID, user_update: UserUpdate):
         if hasattr(user, key):
             setattr(user, key, value)
     updated_user = session.scalars(select(User).where(User.id == id)).first()
-    session.commit()
+    session.flush()
     session.refresh(updated_user)
     return updated_user
 
@@ -56,7 +56,6 @@ def delete_user(*, session: Session, id: UUID):
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User record not found!")
     session.delete(user)
-    session.commit()
     return Message(message="User deleted successfully")
 
 def authenticate_user(*, session: Session, email: str, password: str) -> User:

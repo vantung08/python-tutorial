@@ -14,11 +14,8 @@ from app.database import SessionLocal
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/access-token")
 
 def get_db():
-    session = SessionLocal()
-    try:
+    with SessionLocal.begin() as session:
         yield session
-    finally:
-        session.close()
 
 SessionDep = Annotated[Session, Depends(get_db)]
 
