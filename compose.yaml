@@ -2,7 +2,7 @@ name: python-tutorial
 
 services:
   webapp:
-    image: "ghcr.io/vantung08/python-tutorial:v0.0.9"
+    image: "ghcr.io/vantung08/python-tutorial:v0.1.0"
     container_name: webapp
     env_file:
       - .env
