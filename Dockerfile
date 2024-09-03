@@ -62,4 +62,9 @@ COPY . .
 EXPOSE 8000
 
 # Run the application.
-CMD uvicorn app.main:app --host=0.0.0.0 --port=8000
+# CMD uvicorn app.main:app --host=0.0.0.0 --port=8000
+CMD ["uvicorn", "app.main:app", "--host=0.0.0.0", "--port=8000"]
+
+LABEL org.opencontainers.image.source=https://github.com/vantung08/python-tutorial.git
+LABEL org.opencontainers.image.description="Container image for python-tutorial"
+LABEL org.opencontainers.image.licenses=MIT

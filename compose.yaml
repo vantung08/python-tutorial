@@ -1,6 +1,20 @@
 name: python-tutorial
 
 services:
+  webapp:
+    image: "ghcr.io/vantung08/python-tutorial:v0.0.9"
+    container_name: webapp
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    networks:
+      mynetwork:
+        aliases:
+          - webapp
+    depends_on:
+      - postgresql
+  
   # webapp:
   #   build: .
   #   container_name: webapp
@@ -20,7 +34,7 @@ services:
   #       - action: rebuild
   #         path: pyproject.toml
   #   depends_on:
-  #     - mongodb
+  #     - postgresql
 
   # mongodb:
   #   image: "mongodb/mongodb-community-server:7.0.8-ubuntu2204"
@@ -37,7 +51,7 @@ services:
   #       target: /data/db 
 
   postgresql:
-    image: "postgres:16.4"
+    image: "ghcr.io/vantung08/postgres:16.4"
     container_name: postgresql
     ports:
       - "5432:5432"
@@ -56,6 +70,7 @@ services:
 
 networks:
   mynetwork:
+
 
 volumes:
   postgresql-data:
