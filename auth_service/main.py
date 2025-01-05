@@ -14,4 +14,4 @@ auth_service.include_router(api_router)
 
 @auth_service.get("/")
 async def root():
-    return {"message": "Hello Application"}
+    return {"message": "Hello Auth Service"}
