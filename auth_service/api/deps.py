@@ -1,0 +1,47 @@
+from fastapi.security import OAuth2PasswordBearer
+from typing import Annotated
+from fastapi import Depends, HTTPException, status
+from auth_service.models import AuthUser
+from auth_service.schema import TokenPayload
+import jwt
+from auth_service.core.config import settings
+from auth_service.core.security import ALGORITHM
+from jwt.exceptions import InvalidTokenError
+from auth_service import crud
+from sqlalchemy.orm import Session
+from auth_service.database import SessionLocal
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/access-token")
+
+def get_db():
+    with SessionLocal.begin() as session:
+        yield session
+
+SessionDep = Annotated[Session, Depends(get_db)]
+
+def get_current_user(session: SessionDep, token: Annotated[str, Depends(oauth2_scheme)]) -> AuthUser:
+    credentials_exception = HTTPException(
+         status_code=status.HTTP_401_UNAUTHORIZED,
+         detail="Could not validate credentials",
+         headers={"WWW-Authenticate": "Bearer"}
+    )
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=ALGORITHM)
+        token_data = TokenPayload(**payload)
+        email = token_data.sub
+        if not email:
+             raise credentials_exception
+    except InvalidTokenError:
+         raise credentials_exception
+    user = crud.get_user_by_email(session=session, email=email)
+    if not user:
+        raise credentials_exception
+    return user
+
+def get_current_active_user(current_user: Annotated[AuthUser, Depends(get_current_user)]) -> AuthUser:
+        active_status = current_user.is_active
+        if not active_status:
+             raise HTTPException(
+                  status_code=status.HTTP_403_FORBIDDEN,
+                  detail="Could not validate credential, inactive user")
+        return current_user
