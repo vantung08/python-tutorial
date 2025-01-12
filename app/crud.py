@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.models import User
 from app.schema import UserCreate, UserInDB, UserUpdate, UserUpdateInDB, Message
-from app.core.security import get_password_hash, verify_password
+from app.core.security import get_password_hash
 from fastapi import HTTPException, status
 from pydantic import EmailStr
 from uuid import UUID
@@ -58,13 +58,13 @@ def delete_user(*, session: Session, id: UUID):
     session.delete(user)
     return Message(message="User deleted successfully")
 
-def authenticate_user(*, session: Session, email: str, password: str) -> User:
-    user = get_user_by_email(session=session, email=email)
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User record by email not found")
-    if not verify_password(password, user.hashed_password):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email or password")
-    return user
+# def authenticate_user(*, session: Session, email: str, password: str) -> User:
+#     user = get_user_by_email(session=session, email=email)
+#     if not user:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User record by email not found")
+#     if not verify_password(password, user.hashed_password):
+#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email or password")
+#     return user
 
 
 # from app.models import User

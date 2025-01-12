@@ -20,14 +20,14 @@ def create_user(user_create: UserCreate, session: SessionDep) -> Any:
     created_user = crud.create_user(session=session, schema_user=user_create)
     return created_user
     
-@router.post("/signup", response_model=UserPublish)
-def register_user(user_create: UserCreate, session: SessionDep) -> Any:
-    user = crud.get_user_by_email(session=session, email=user_create.email)
-    if user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, 
-                            detail="The user with this email already exists in the system.")
-    registered_user = crud.create_user(session=session, schema_user=user_create)
-    return registered_user
+# @router.post("/signup", response_model=UserPublish)
+# def register_user(user_create: UserCreate, session: SessionDep) -> Any:
+#     user = crud.get_user_by_email(session=session, email=user_create.email)
+#     if user:
+#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, 
+#                             detail="The user with this email already exists in the system.")
+#     registered_user = crud.create_user(session=session, schema_user=user_create)
+#     return registered_user
 
 @router.get("/me", response_model=UserPublish)
 def get_user_me(current_user: Annotated[User, Depends(get_current_active_user)]) -> Any:
