@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from app.models import User
-from app.schema import UserCreate, UserInDB, UserUpdate, UserUpdateInDB, Message
-from app.core.security import get_password_hash
+from users_management.models import User
+from users_management.schema import UserCreate, UserInDB, UserUpdate, UserUpdateInDB, Message
+from users_management.core.security import get_password_hash
 from fastapi import HTTPException, status
 from pydantic import EmailStr
 from uuid import UUID

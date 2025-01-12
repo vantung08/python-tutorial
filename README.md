@@ -12,5 +12,5 @@ Start local DB
     docker compose up
 
 Start FastAPI app
-    uvicorn app.main:app --host 0.0.0.0 --port 8000
+    uvicorn users_management.main:users_management --host 0.0.0.0 --port 8000
     uvicorn auth_service.main:auth_service --host 0.0.0.0 --port 8001

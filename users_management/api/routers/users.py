@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app import crud
-from app.schema import UserCreate, UserPublish, UserUpdate, Message
-from app.models import User
+from users_management import crud
+from users_management.schema import UserCreate, UserPublish, UserUpdate, Message
+from users_management.models import User
 from uuid import UUID
-from app.api.deps import get_current_active_user, SessionDep
+from users_management.api.deps import get_current_active_user, SessionDep
 from typing import Annotated, Any
 
 router = APIRouter(

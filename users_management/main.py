@@ -1,8 +1,8 @@
 import logging
 from fastapi import FastAPI
-from app.api.main import api_router
-from app import models
-from app.database import engine
+from users_management.api.main import api_router
+from users_management import models
+from users_management.database import engine
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -22,10 +22,10 @@ models.Base.metadata.create_all(bind=engine)
 
 # app = FastAPI(lifespan=mongodb_lifespan)
 #-----------------
-app = FastAPI()
+users_management = FastAPI()
 
-app.include_router(api_router)
+users_management.include_router(api_router)
 
-@app.get("/")
+@users_management.get("/")
 async def root():
     return {"message": "Hello Application"}
