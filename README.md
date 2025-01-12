@@ -13,4 +13,4 @@ Start local DB
 
 Start FastAPI app
     uvicorn users_management.main:users_management --host 0.0.0.0 --port 8000
-    uvicorn auth_service.main:auth_service --host 0.0.0.0 --port 8001
+    uvicorn auth_management.main:auth_management --host 0.0.0.0 --port 8001

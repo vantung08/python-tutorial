@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
-from auth_service import crud
-from auth_service.schema import UserCreate, UserPublish
-from auth_service.api.deps import SessionDep
+from auth_management import crud
+from auth_management.schema import UserCreate, UserPublish
+from auth_management.api.deps import SessionDep
 from typing import Any
 
 router = APIRouter(

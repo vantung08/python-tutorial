@@ -1,17 +1,17 @@
 import logging
 from fastapi import FastAPI
-from auth_service.api.main import api_router
-from auth_service import models
-from auth_service.database import engine
+from auth_management.api.main import api_router
+from auth_management import models
+from auth_management.database import engine
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 models.Base.metadata.create_all(bind=engine)
-auth_service = FastAPI()
+auth_management = FastAPI()
 
-auth_service.include_router(api_router)
+auth_management.include_router(api_router)
 
-@auth_service.get("/")
+@auth_management.get("/")
 async def root():
     return {"message": "Hello Auth Service"}

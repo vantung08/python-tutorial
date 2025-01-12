@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from auth_service.models import AuthUser
-from auth_service.schema import UserCreate, UserInDB, UserUpdate, UserUpdateInDB, Message
-from auth_service.core.security import get_password_hash, verify_password
+from auth_management.models import AuthUser
+from auth_management.schema import UserCreate, UserInDB, UserUpdate, UserUpdateInDB, Message
+from auth_management.core.security import get_password_hash, verify_password
 from fastapi import HTTPException, status
 from pydantic import EmailStr
 from uuid import UUID

@@ -1,15 +1,15 @@
 from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
-from auth_service.models import AuthUser
-from auth_service.schema import TokenPayload
+from auth_management.models import AuthUser
+from auth_management.schema import TokenPayload
 import jwt
-from auth_service.core.config import settings
-from auth_service.core.security import ALGORITHM
+from auth_management.core.config import settings
+from auth_management.core.security import ALGORITHM
 from jwt.exceptions import InvalidTokenError
-from auth_service import crud
+from auth_management import crud
 from sqlalchemy.orm import Session
-from auth_service.database import SessionLocal
+from auth_management.database import SessionLocal
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/access-token")
 

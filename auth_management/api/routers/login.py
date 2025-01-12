@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends
-from auth_service import crud
-from auth_service.schema import Token
-from auth_service.core.security import create_access_token
+from auth_management import crud
+from auth_management.schema import Token
+from auth_management.core.security import create_access_token
 from datetime import timedelta
-from auth_service.core.config import settings
+from auth_management.core.config import settings
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
-from auth_service.api.deps import SessionDep
+from auth_management.api.deps import SessionDep
 
 router = APIRouter(
     prefix="/login"

@@ -2,7 +2,7 @@ from passlib.context import CryptContext
 from typing import Any
 from datetime import timedelta, datetime, timezone
 import jwt
-from auth_service.core.config import settings
+from auth_management.core.config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
