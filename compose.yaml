@@ -2,18 +2,18 @@ name: python-tutorial
 
 services:
   # webapp:
-  #   image: "ghcr.io/vantung08/python-tutorial:v0.1.0"
-  #   container_name: webapp
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "8000:8000"
-  #   networks:
-  #     mynetwork:
-  #       aliases:
-  #         - webapp
-  #   depends_on:
-  #     - postgresql
+    # image: "ghcr.io/vantung08/python-tutorial:v0.1.0"
+    # container_name: webapp
+    # env_file:
+    #   - .env
+    # ports:
+    #   - "8000:8000"
+    # networks:
+    #   mynetwork:
+    #     aliases:
+    #       - webapp
+    # depends_on:
+    #   - postgresql
   
   # webapp:
   #   build: .
