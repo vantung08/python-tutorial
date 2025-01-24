@@ -1,18 +1,19 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from uuid import UUID, uuid4
+from sqlalchemy import ForeignKey
+from uuid import UUID
 
 class Base(DeclarativeBase):
     pass
 
 class User(Base):
     __tablename__ = "users"
-    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    email: Mapped[str] = mapped_column(unique=True, index=True)
-    hashed_password: Mapped[str] = mapped_column()
-    is_active: Mapped[bool] = mapped_column(default=True)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("auth_users.id", ondelete="CASCADE"), primary_key=True)
     full_name: Mapped[str | None] = mapped_column(default=None)
     age: Mapped[int | None] = mapped_column(default=None)
     gender: Mapped[str | None] = mapped_column(default=None)
+    # email: Mapped[str] = mapped_column(unique=True, index=True)
+    # hashed_password: Mapped[str] = mapped_column()
+    # is_active: Mapped[bool] = mapped_column(default=True)
 
 
 
